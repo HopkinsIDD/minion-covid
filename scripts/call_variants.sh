@@ -105,4 +105,8 @@ if [ ! -f $DIR/nanopolish/$NAME.nanopolish.filt.rename.vcf.gz ]; then
 	bcftools index --threads $NUM_CORES $DIR/nanopolish/$NAME.nanopolish.filt.rename.vcf.gz
 fi
 
+# calculate depth at each position
+# needed to make consensus genome
+samtools depth -a -m 10000 $DIR/nanopolish/$NAME.aln.ref.sorted.bam > $DIR/nanopolish/$NAME.ref.depth.txt
+
 echo "nanopolish script completed successfully"
