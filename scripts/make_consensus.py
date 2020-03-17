@@ -22,6 +22,12 @@ from Bio.SeqRecord import SeqRecord
 
 from datetime import datetime
 
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+
+#### COMMAND LINE ARGUMENTS ####
 
 SAMPLENAME = sys.argv[1]
 DIR = sys.argv[2] # directory with data for the sample
@@ -37,6 +43,7 @@ HQ_THRESHOLD=0.8 # threshold for a high quality genome
 vcffile = DIR+"/nanopolish/"+SAMPLENAME+".nanopolish.filt.rename.vcf.gz"
 depthfile = DIR+"/nanopolish/"+SAMPLENAME+".ref.depth.txt"
 outdir = DIR+"/genomes/"+SAMPLENAME+".ref.fasta"
+outplot = DIR+"/genomes/"+SAMPLENAME+".coverage.pdf"
 
 #### BEGIN CONSENSUS GENOME ASSEMBLY ####
 
@@ -146,7 +153,8 @@ for base in cons:
 # save high quality genomes
 if float((CONTIG_LEN-m)/CONTIG_LEN)>HQ_THRESHOLD:
 
-    print("high quality genome, coverage = ",float((CONTIG_LEN-m)/CONTIG_LEN))
+    print("high quality genome, fraction of positions with ",DEPTH_THRESHOLD,"x coverage = ",
+        float((CONTIG_LEN-m)/CONTIG_LEN),sep="")
 
     # save the genome to file
     seq = ''.join(cons)
@@ -155,9 +163,57 @@ if float((CONTIG_LEN-m)/CONTIG_LEN)>HQ_THRESHOLD:
 
 # save lower quality genomes with warning
 else:
-    print("low quality genome, coverage = ",float((CONTIG_LEN-m)/CONTIG_LEN))
+    print("low quality genome, fraction of positions with ",DEPTH_THRESHOLD,"x coverage = ",
+        float((CONTIG_LEN-m)/CONTIG_LEN),sep="")
 
     # save the genome to file
     seq = ''.join(cons)
     new_record = SeqRecord(Seq(seq),id=SAMPLENAME,description="")
     SeqIO.write(new_record, outdir, "fasta")
+
+#### PLOT COVERAGE FOR THIS GENOME ####
+
+# calculate and print the mean and median coverage based on samtools depth
+med_depth = depth["depth"].median()
+print("median depth of coverage:")
+print(med_depth)
+
+mean_depth = depth["depth"].mean()
+print("mean depth of coverage:")
+print(mean_depth)
+
+# create plot
+fig = plt.figure(figsize=(12,4),frameon=False)
+ax1 = fig.add_subplot(111)
+
+ax1.plot(depth["pos"],depth["depth"],color='lightgray')
+#ax1.plot(depth["pos"],depth["depth"],linestyle="None",marker='o',markerfacecolor='white',markeredgecolor='gray')
+
+ax1.set_xlim(0,len(depth.index))
+
+ymax = depth["depth"].max()
+ax1.set_ylim(0,ymax)
+
+ax1.set_ylabel("Read depth",rotation="vertical")
+ax1.set_xlabel("Position along genome")
+
+ax1.yaxis.set_label_coords(-0.06,0.5)
+
+#tick mark and axes settings
+ax1.tick_params(axis='x',       #changes apply to the x-axis
+            which='both',      #both major and minor ticks are affected
+            bottom=True,       #ticks along the bottom edge are on
+            top=False,         #ticks along the top edge are off
+            labelbottom=True)  #labels along the bottom edge are on
+
+ax1.tick_params(axis='y',       #changes apply to the y-axis
+            which='both',      #both major and minor ticks are affected
+            left=True,         #ticks along the left edge are on
+            right=False,       #ticks along the right edge are off
+            labelleft=True)    #labels along the left edge are on
+
+ax1.xaxis.grid(False)
+ax1.spines['right'].set_visible(False)
+ax1.spines['top'].set_visible(False)
+
+plt.savefig(outplot,format="pdf")
