@@ -38,33 +38,32 @@ if __name__ == "__main__":
     # load samtools depth output as dataframe
     cov = pd.read_csv(DEPTH_FILE,sep='\t',header=None,names=["ref","pos","depth"])
 
-    # separate chromosomes
-    chrom1 = cov[cov["pos"]<2961182]
-    chrom2 = cov[cov["pos"]>2961181]
-    chrom2["pos"] = df["pos"].apply(lambda x: x - 2961181)
+    # calculate and print the mean and median coverage based on samtools depth
+    med_depth = cov["depth"].median()
+    print("median depth of coverage:")
+    print(med_depth)
+
+    mean_depth = cov["depth"].mean()
+    print("mean depth of coverage:")
+    print(mean_depth)
 
     # create plot
     fig = plt.figure(figsize=(12,4),frameon=False)
-    ax1 = fig.add_subplot(211)
-    ax2 = fig.add_subplot(212)
+    ax1 = fig.add_subplot(111)
 
-    ax1.plot(chrom1["pos"],chrom1["depth"],color='lightgray')
-    ax2.plot(chrom2["pos"],chrom2["depth"],color='lightgray')
+    ax1.plot(cov["pos"],cov["depth"],color='lightgray')
+    #ax1.plot(cov["pos"],cov["depth"],linestyle="None",marker='o',markerfacecolor='white',markeredgecolor='gray')
 
-    ax1.set_xlim(0,len(chrom1.index))
-    ax2.set_xlim(0,len(chrom1.index))
+    ax1.set_xlim(0,len(cov.index))
 
-    ymax = max(chrom1["depth"].max(),chrom2["depth"].max())
-    ax1.set_ylim(-25,ymax)
-    ax2.set_ylim(-25,ymax)
+    ymax = cov["depth"].max()
+    ax1.set_ylim(0,ymax)
 
-    ax1.set_ylabel("chrom1",rotation="horizontal")
-    ax2.set_ylabel("chrom2",rotation="horizontal")
+    ax1.set_ylabel("Read depth",rotation="vertical")
+    ax1.set_xlabel("Position along genome")
 
-    ax1.yaxis.set_label_coords(-0.09,0.5)
-    ax2.yaxis.set_label_coords(-0.09,0.5)
+    ax1.yaxis.set_label_coords(-0.06,0.5)
 
     apply_plot_settings(ax1)
-    apply_plot_settings(ax2)
 
     plt.savefig(OUTPLOT,format="pdf")
