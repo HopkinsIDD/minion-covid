@@ -55,6 +55,12 @@ if [ ! -f $DIR/nanopolish/$NAME.aln.ref.sorted.bam ]; then
 	samtools index $DIR/nanopolish/$NAME.aln.ref.sorted.bam
 fi
 
+echo "number of reads in sample $NAME:"
+samtools view -c $DIR/nanopolish/$NAME.aln.ref.sorted.bam
+
+echo "number of mapped reads in sample $NAME:"
+samtools view -c -F 4 $DIR/nanopolish/$NAME.aln.ref.sorted.bam
+
 date
 echo "calling variants with nanopolish"
 
