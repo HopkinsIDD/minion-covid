@@ -67,11 +67,8 @@ samtools view -c -F 4 $DIR/nanopolish/$NAME.aln.ref.sorted.bam
 date
 echo "calling variants with nanopolish"
 
-
-# create the correct header file if it does not exist
-if [ ! -f $DIR/nanopolish/headertext.txt ]; then
-	echo "##contig=<ID=$CONTIG_NAME,length=$CONTIG_LEN>" > $DIR/nanopolish/headertext.txt
-fi
+# set the desired header text
+echo "##contig=<ID=$CONTIG_NAME,length=$CONTIG_LEN>" > $DIR/nanopolish/headertext.txt
 
 # call variants with nanopolish
 if [ ! -f $DIR/nanopolish/$NAME.nanopolish.vcf ]; then
