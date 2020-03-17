@@ -26,12 +26,19 @@ from datetime import datetime
 SAMPLENAME = sys.argv[1]
 DIR = sys.argv[2] # directory with data for the sample
 
-DEPTH_THRESHOLD = 3
-REFERENCE = "/home/minion/sars-cov2-1/artic-ncov2019/primer_schemes/nCoV-2019/V1/nCoV-2019.reference.fasta"
+#### VALUES TO CHANGE PRIOR TO RUN ####
+
+DEPTH_THRESHOLD = 20
+REFERENCE=DIR+"/ref_genomes/reference.fasta" # path to reference genome
+CONTIG_LEN=29903
+
+HQ_THRESHOLD=0.8 # threshold for a high quality genome
 
 vcffile = DIR+"/nanopolish/"+SAMPLENAME+".nanopolish.filt.rename.vcf.gz"
 depthfile = DIR+"/nanopolish/"+SAMPLENAME+".ref.depth.txt"
-outdir = DIR+"/nanopolish/"+SAMPLENAME+".ref.fasta"
+outdir = DIR+"/genomes/"+SAMPLENAME+".ref.fasta"
+
+#### BEGIN CONSENSUS GENOME ASSEMBLY ####
 
 print("output file for sample")
 print(SAMPLENAME)
@@ -137,9 +144,9 @@ for base in cons:
         m = m+1
 
 # save high quality genomes
-if float((29903-m)/29903)>0.8:
+if float((CONTIG_LEN-m)/CONTIG_LEN)>HQ_THRESHOLD:
 
-    print("high quality genome, coverage = ",float((29903-m)/29903))
+    print("high quality genome, coverage = ",float((CONTIG_LEN-m)/CONTIG_LEN))
 
     # save the genome to file
     seq = ''.join(cons)
@@ -148,7 +155,7 @@ if float((29903-m)/29903)>0.8:
 
 # save lower quality genomes with warning
 else:
-    print("low quality genome, coverage = ",float((29903-m)/29903))
+    print("low quality genome, coverage = ",float((CONTIG_LEN-m)/CONTIG_LEN))
 
     # save the genome to file
     seq = ''.join(cons)
