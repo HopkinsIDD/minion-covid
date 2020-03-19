@@ -1,10 +1,8 @@
-## SARS-CoV-2 Referenced-Based Genome Assembly from Oxford Nanopore Data
-------
+## SARS-CoV-2 Genome Assembly from Oxford Nanopore Data
 
 This is a guide for taking reads generated on a Oxford Nanopore sequencer and assembly by aligning reads to a reference. Note that this guide is not optimized for reads generated with short amplicons.
 
 ## Table of Contents
-------
 
 * [Setting up your working directory](#setting-up-your-working-directory)
 * [Installation](#installation)
@@ -14,7 +12,6 @@ This is a guide for taking reads generated on a Oxford Nanopore sequencer and as
 * [Assembly](#assembly)
 
 ## Setting up your working directory
-------
 
 Before you start, you will need to clone this repository. Cloning the repository will ensure you have all the necessary scripts and folders to run the analysis.
 
@@ -39,7 +36,7 @@ pwd
 
 The output, which might look something like `/home/username/my-project/`, will be your **working directory** for this analysis. Anytime you are asked to provide the path to your working directory, copy in this information.
 
-From inside your **working directory**, type the following commands to copy this github repository onto your computer
+From inside your **working directory**, type the following commands to copy this github repository onto your computer:
 
 ```
 apt update
@@ -69,7 +66,6 @@ Use the bottom number on your screen as the number you provide any time a script
 
 
 ## Installation
-------
 
 Before starting, make sure you are in your **working directory**:
 
@@ -92,7 +88,6 @@ Please note that you will need an internet connection to complete this step, and
 
 
 ## Basecalling
-------
 
 Before starting, make sure you are in your **working directory**:
 
@@ -107,7 +102,6 @@ guppy_basecaller -r -v -c dna_r9.4.1_450bps_fast.cfg -i path-to-raw-data -s base
 ```
 
 ## Visualizing run metrics
-------
 
 Before starting, make sure you are in your **working directory**:
 
@@ -126,7 +120,6 @@ After this command finishes, open a file browser and find the nanoplot folder in
 
 
 ## Demultiplexing
-------
 
 Before starting, make sure you are in your **working directory**:
 
@@ -136,7 +129,7 @@ cd my-project
 
 Demultiplexing is the process of splitting up the reads in your sequencing run by sample. In the lab, you assigned each sample a unique barcode. We will use these barcodes to assign each read to a sample, essentially dividing up all of the MinION reads into the samples they originally came from.
 
-Open a text editor on your computer (e.g., Notepad). We will type up the barcodes so they can be used in our code. Type up your barcodes in the format below. The white space between the sample name and the barcode number must be a tab character, and you should replace **NB##** with the appropriate barcode number (e.g., NB02).
+Open a text editor on your computer (e.g., Notepad). We will type up the barcodes so they can be used in our code. Type up your barcodes in the format below. The white space between the sample name and the barcode number must be a tab character, and you should replace **NB##** with the appropriate barcode number (e.g., NB02) and **sample1-name**, etc. with the names of your samples.
 
 ```
 sample1-name	NB##
@@ -160,10 +153,9 @@ Now you can start the demultiplex. Keep in mind that this process can take sever
 bash scripts/batch_demux.sh my-project samplesheet.txt num-cores
 ```
 
-To determine what number to enter instead of **num-cores**, see [Determining the number of processors on your computer](determining-the-number-of-processors-on-your-computer) above.
+To determine what number to enter instead of **num-cores**, see [Determining the number of processors on your computer](#determining-the-number-of-processors-on-your-computer) above.
 
 ## Assembly
-------
 
 Before starting, make sure you are in your **working directory**:
 
@@ -177,7 +169,7 @@ We are now going to assemble the reads from the MinION sequencer into (hopefully
 bash scripts/call_variant.sh sample-name my-project path-to-raw-data num-cores
 ```
 
-To determine the path to enter instead of **path-to-raw-data**, see [Finding your raw data](#finding-your-raw-data) above. To determine what number to enter instead of **num-cores**, see [Determining the number of processors on your computer](determining-the-number-of-processors-on-your-computer) above.
+To determine the path to enter instead of **path-to-raw-data**, see [Finding your raw data](#finding-your-raw-data) above. To determine what number to enter instead of **num-cores**, see [Determining the number of processors on your computer](#determining-the-number-of-processors-on-your-computer) above.
 
 When this finishes, create your final genome by running the following command:
 
