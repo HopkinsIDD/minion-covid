@@ -37,6 +37,11 @@ fi
 
 DIR=${DIR%/} # remove trailing slash from directory name if necessary
 
+# make demux directory if it does not already exist
+if [ ! -d $DIR/demux ]; then
+	mkdir $DIR/demux
+fi
+
 #### SPLIT FILES INTO SUBDIRECTORIES ####
 
 # if fastq files have not yet been sorted into bins
