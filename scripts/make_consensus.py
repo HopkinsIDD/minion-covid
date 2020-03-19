@@ -32,6 +32,8 @@ import matplotlib.pyplot as plt
 SAMPLENAME = sys.argv[1]
 DIR = sys.argv[2] # directory with data for the sample
 
+DIR = DIR.rstrip('/') # remove trailing slash if necessary
+
 #### VALUES TO CHANGE PRIOR TO RUN ####
 
 DEPTH_THRESHOLD = 20

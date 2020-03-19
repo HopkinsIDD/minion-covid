@@ -35,6 +35,8 @@ if [ ! -d $FASTQ ]; then
 	exit 1
 fi
 
+DIR=${DIR%/} # remove trailing slash from directory name if necessary
+
 #### SPLIT FILES INTO SUBDIRECTORIES ####
 
 # if fastq files have not yet been sorted into bins
