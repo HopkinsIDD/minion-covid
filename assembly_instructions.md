@@ -166,7 +166,7 @@ cd my-project
 We are now going to assemble the reads from the MinION sequencer into (hopefully) a SARS-CoV-2 genome. To do this, we use a software called “nanopolish” that improves our basecalls and identifies variants from the reference genome. You will need to run this software once for each sample. Run the software as below, replacing **sample-name** with the name of the sample you want to run:
 
 ```
-bash scripts/call_variant.sh sample-name my-project path-to-raw-data num-cores
+bash scripts/call_variants.sh sample-name my-project path-to-raw-data num-cores
 ```
 
 To determine the path to enter instead of **path-to-raw-data**, see [Finding your raw data](#finding-your-raw-data) above. To determine what number to enter instead of **num-cores**, see [Determining the number of processors on your computer](#determining-the-number-of-processors-on-your-computer) above.
